@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+report/*.aux
+report/*.log
+report/*.out
+.ipynb_checkpoints/
