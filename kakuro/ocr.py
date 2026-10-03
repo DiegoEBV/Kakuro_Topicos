@@ -148,7 +148,10 @@ def tesseract_number(binary_white_on_black: np.ndarray) -> Optional[int]:
     s = 48.0 / max(1, img.shape[0])
     img = cv2.resize(img, None, fx=s, fy=s, interpolation=cv2.INTER_CUBIC)
     img = cv2.copyMakeBorder(img, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=255)
-    txt = pytesseract.image_to_string(
-        img, config="--psm 7 -c tessedit_char_whitelist=0123456789").strip()
+    try:
+        txt = pytesseract.image_to_string(
+            img, config="--psm 7 -c tessedit_char_whitelist=0123456789").strip()
+    except pytesseract.TesseractNotFoundError:
+        return None
     digits = "".join(ch for ch in txt if ch.isdigit())
     return int(digits) if digits else None

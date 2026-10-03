@@ -68,7 +68,10 @@ def evaluate_dataset(data_dir: str, classifier, ocr: str = "mlp", correction: bo
                 row["backend"] = sr.backend
                 row["correct_solution"] = bool(sr.solved and gt is not None and gt.solution == sr.solution)
         except Exception as e:  # el pipeline no debe caerse con una imagen mala
-            row.update(error=str(e), grid_ok=False, cells_acc=0.0, clue_acc=0.0, exact=False,
-                       solved=False, correct_solution=False)
+            row.update(error=str(e), grid_ok=False, cells_acc=0.0, cells_ok=0, cells_total=0,
+                       clue_acc=0.0, clues_ok=0, clues_total=0, exact=False,
+                       vision_s=row.get("vision_s", float("nan")), corrections=row.get("corrections", 0),
+                       solve_s=float("nan"), solved=False, unique=False, backend=None,
+                       correct_solution=False)
         rows.append(row)
     return rows
