@@ -1,12 +1,13 @@
 numpy>=1.24
-opencv-python-headless>=4.8
+opencv-python>=4.8
 scikit-image>=0.21
 scikit-learn>=1.3
 joblib>=1.3
 pandas>=2.0
 matplotlib>=3.7
 Pillow>=10.0
-jinja2>=3.1   # requerido por pandas para DataFrame.to_latex / .style
+jinja2>=3.1
 ortools>=9.10
-pytesseract>=0.3.10   # opcional: comparación con Tesseract (requiere el binario tesseract-ocr)
-pytest>=7.0           # opcional: pruebas
+streamlit>=1.30
+pytest>=7.0
+pytesseract>=0.3.10   # opcional: comparativa con Tesseract OCR

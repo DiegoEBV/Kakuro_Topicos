@@ -86,16 +86,18 @@ def find_board(gray: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
                 continue
             quad_area = cv2.contourArea(approx)
             fill = area / max(quad_area, 1)        # ≈1 si el contorno es realmente un cuadrilátero
-            if fill < 0.80 or quad_area > 0.95 * img_area:
+            if fill < 0.75 or quad_area > 0.992 * img_area:
                 continue
             corners = order_corners(approx)
             band = _border_darkness(gray, corners)
             cands.append((quad_area, band, corners))
     if not cands:
-        raise RuntimeError("no se encontró el tablero en la imagen")
+        h, w = gray.shape
+        full_corners = np.float32([[0, 0], [w - 1, 0], [w - 1, h - 1], [0, h - 1]])
+        return full_corners, binary
     # El tablero tiene un borde exterior grueso y oscuro; la hoja de papel no.
     best_band = max(c[1] for c in cands)
-    pool = [c for c in cands if c[1] >= 0.85 * best_band]
+    pool = [c for c in cands if c[1] >= 0.80 * best_band]
     # Además, la región debe mostrar una grilla periódica clara
     qual = []
     for area, band, corners in pool:
@@ -262,27 +264,27 @@ def extract_clue_glyphs(cell_gray: np.ndarray) -> Dict[str, List[Tuple[np.ndarra
         return {"across": [], "down": []}
     c8 = (255 * contrast / contrast.max()).astype(np.uint8)
     _, b = cv2.threshold(c8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    # borra la diagonal: se estima su desplazamiento real (moda de y-x cerca de y=x),
-    # lo que tolera pequeños errores de rectificación, y se elimina una banda a su alrededor
     yy, xx = np.mgrid[0:cp, 0:cp]
     dd = (yy - xx)
-    near = (b > 0) & (np.abs(dd) < 0.2 * cp)
+    max_off = max(4, int(round(0.05 * cp)))
+    near = (b > 0) & (np.abs(dd) <= max_off)
     off = 0
-    if near.sum() > 0.3 * cp:
-        hist = np.bincount((dd[near] + cp).ravel(), minlength=2 * cp + 1)
+    if near.sum() > 0.25 * cp:
+        hist = np.bincount((dd[near] + max_off).ravel(), minlength=2 * max_off + 1)
         hist = np.convolve(hist, np.ones(3), "same")
-        off = int(np.argmax(hist)) - cp
-    b[np.abs(dd - off) < 0.09 * cp] = 0
-    f = int(0.07 * cp)
-    b[:f, :] = b[-f:, :] = 0
-    b[:, :f] = b[:, -f:] = 0
+        peak = int(np.argmax(hist)) - max_off
+        if abs(peak) <= max_off:
+            off = peak
+    b[np.abs(dd - off) < 0.08 * cp] = 0
     n, lab, st, cen = cv2.connectedComponentsWithStats(b)
     out = {"across": [], "down": []}
     for i in range(1, n):
         x, y, w, h, area = st[i]
-        if h < 0.12 * cp or h > 0.5 * cp or area < 0.004 * cp * cp or w > 0.6 * cp:
+        if w > 0.65 * cp or h > 0.65 * cp:   # restos de bordes de la celda
             continue
-        if w <= 0.04 * cp or area / float(w * h) < 0.18:   # restos de líneas (diagonal/bordes)
+        if h < 0.11 * cp or h > 0.55 * cp or area < 0.0035 * cp * cp or w > 0.6 * cp:
+            continue
+        if w <= 0.035 * cp or area / float(w * h) < 0.16:   # restos de líneas (diagonal/bordes)
             continue
         mask = (lab == i).astype(np.uint8) * 255
         cx, cy = cen[i]
@@ -405,6 +407,7 @@ def read_puzzle(img_bgr: np.ndarray, classifier=None, ocr: str = "mlp",
     down = [[0] * cols for _ in range(rows)]
     across = [[0] * cols for _ in range(rows)]
     pad = int(0.04 * CELL_PX)
+    wg_padded = cv2.copyMakeBorder(wg, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
     glyph_log = []
     warnings = []
     corrections = 0
@@ -423,9 +426,8 @@ def read_puzzle(img_bgr: np.ndarray, classifier=None, ocr: str = "mlp",
             ld = 0
             while r + 1 + ld < rows and white[r + 1 + ld][c]:
                 ld += 1
-            y0, x0 = max(0, r * CELL_PX - pad), max(0, c * CELL_PX - pad)
-            crop = wg[y0:(r + 1) * CELL_PX + pad, x0:(c + 1) * CELL_PX + pad]
-            crop = cv2.resize(crop, (CELL_PX, CELL_PX))
+            crop = wg_padded[r * CELL_PX : (r + 1) * CELL_PX + 2 * pad,
+                             c * CELL_PX : (c + 1) * CELL_PX + 2 * pad]
             glyphs = extract_clue_glyphs(crop)
             for side, length in (("across", la), ("down", ld)):
                 if not need[side]:

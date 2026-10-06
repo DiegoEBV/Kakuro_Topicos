@@ -5,3 +5,5 @@ report/*.aux
 report/*.log
 report/*.out
 .ipynb_checkpoints/
+solucion*.jpg
+solucion*.png
