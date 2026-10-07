@@ -34,7 +34,6 @@ TP1_TCC/
 ├── app.py                    # Interfaz Web interactiva en Streamlit (Dashboard completo)
 ├── main.py                   # Punto de entrada unificado por consola (CLI, UI, Tests)
 ├── Kakuro_CV_CP.ipynb        # Notebook interactivo principal (Jupyter / Google Colab)
-├── VIDEO_GUION.md            # Guion detallado para el video demostrativo de 5 minutos
 ├── requirements.txt          # Dependencias del proyecto
 ├── kakuro/                   # Paquete Python principal
 │   ├── puzzle.py             # Estructuras de datos (Kakuro, Runs, Clues) y combinatoria
@@ -75,7 +74,7 @@ Requiere **Python ≥ 3.9** (probado y verificado en Python 3.12).
 1. Clonar el repositorio:
    ```bash
    git clone https://github.com/USUARIO/TP1_TCC.git
-   cd TP1_TCC
+   cd Kakuro_Topicos
    ```
 
 2. Crear y activar un entorno virtual:
