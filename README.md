@@ -27,23 +27,6 @@ imagen ─► preprocesamiento ─► tablero + homografía (H) ─► tamaño d
 
 ---
 
-## 📋 Cumplimiento con la Rúbrica de Evaluación
-
-| Criterio de la Rúbrica | Puntos | Implementación en este Proyecto |
-|---|:---:|---|
-| **Visión Computacional e IA** | 3 pts | Pipeline OpenCV con umbral adaptativo + Otsu, detección de 4 esquinas con validación de borde oscuro, homografía $H$, estimación de grilla por perfiles de gradiente de Sobel, modelo cuadrático de iluminación de papel, y clasificador MLP propio sobre descriptores HOG con eliminación de diagonales. |
-| **Bajo diferentes condiciones de imagen** | 1 pt | Dataset de 14 imágenes que cubre: capturas digitales limpias, compresión JPEG agresiva, fotos con perspectiva pronunciada, rotación de 14°, baja iluminación con ruido de sensor, sombras diagonales, luz cálida, desenfoque y tableros asimétricos. |
-| **Modelado CP: Formulación matemática** | 3 pts | Variables $X_{r,c} \in \{1,\dots,9\}$ para cada celda jugable. Formulación matemática formal detallada en el informe IEEE y en el notebook. Totalmente parametrizado para cualquier tamaño e instancia. |
-| **Uso eficiente de restricciones globales** | 3 pts | Implementación con `AllDifferent` y `Sum` en OR-Tools CP-SAT, y extensión `global_dom` con filtrado de dominios y restricción global `Table` (`AddAllowedAssignments`). Motor alternativo con consistencia GAC por emparejamientos bipartitos. |
-| **Uso eficiente de restricciones reificadas** | 1 pt | 1) Verificación formal de solución única mediante restricciones semi-reificadas ($\text{diff}_c \implies X_c \ne s_c$ y $\bigvee \text{diff}_c$). 2) Modelo alternativo one-hot booleano con reificación bidireccional ($b_{c,d} \iff X_c = d$) con `OnlyEnforceIf`. |
-| **Puente IA $\to$ CP sin intervención manual** | 1 pt | Pipeline 100% automático: una sola función (`solve_image`) o comando CLI/Web recibe el archivo de imagen y entrega la solución sin ajustes humanos. |
-| **Visualización clara** | 1 pt | Dos modalidades: 1) Proyección de realidad aumentada sobre la perspectiva original usando $H^{-1}$. 2) Render vectorial limpio del tablero resuelto en alta resolución. Interfaz Web interactiva en Streamlit. |
-| **Código limpio y buenas prácticas** | 2 pts | Paquete modularizado `kakuro/`, tipado estático (`typing`), docstrings, scripts CLI limpios, y suite de pruebas unitarias con `pytest` pasando al 100%. |
-| **Informe técnico en LaTeX (formato IEEE)** | 5 pts | Artículo completo de 7 páginas en formato IEEE (`report/main.tex` y `report/main.pdf`), con algoritmos, tablas empíricas de complejidad y figuras vectoriales de cada etapa. |
-| **TOTAL** | **20 / 20** | |
-
----
-
 ## 🗂️ Estructura del Repositorio
 
 ```
