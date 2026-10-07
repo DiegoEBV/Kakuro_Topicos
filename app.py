@@ -2,7 +2,6 @@
 app.py — Kakuro Research Workbench: Computer Vision + Constraint Satisfaction.
 Herramienta de inspección interactiva para resolución de Kakuro.
 Arquitectura: OpenCV (Homografía + Binarización Adaptativa) + MLP HOG + Google OR-Tools CP-SAT.
-Diseño técnico de alta precisión (libre de patrones y clichés de interfaz generada por IA).
 """
 import io
 import json

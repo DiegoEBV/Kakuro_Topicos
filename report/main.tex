@@ -44,7 +44,7 @@
 
 \title{Resolución automática de Kakuro a partir de imágenes mediante Visión Computacional, una red neuronal propia y Constraint Programming}
 
-\author{\IEEEauthorblockN{Ballon Diego, Nombre Apellido 2}
+\author{\IEEEauthorblockN{Ballon Diego, Jeffrey Diaz}
 \IEEEauthorblockA{CC58 -- Tópicos en Ciencia de la Computación\\
 Facultad de Ingeniería -- Ciencias de la Computación\\
 Lima, Perú}}
@@ -133,7 +133,7 @@ por mínimos cuadrados con muestras del papel en un anillo exterior al tablero (
 Para cada bloque que inicia una suma se recorta la celda y:
 \begin{enumerate}
   \item se detecta la \textbf{polaridad} (tinta clara sobre bloque oscuro o tinta oscura sobre bloque claro) comparando la mediana con los percentiles 2 y 98, y se binariza el contraste con Otsu;
-  \item se \textbf{elimina la diagonal}: su desplazamiento real se estima como la moda de $y-x$ entre los píxeles de tinta cercanos a $y=x$, lo que tolera pequeños errores de rectificación, y se borra una banda de $\pm9\,\%$ de la celda; se descartan componentes con forma de línea (relleno $<18\,\%$);
+  \item se \textbf{elimina la diagonal}: su desplazamiento real se estima como la moda de $y-x$ entre los píxeles de tinta cercanos a $y=x$, lo que tolera pequeños errores de rectificación, y se borra una banda de $\pm9\%$ de la celda; se descartan componentes con forma de línea (relleno $<18\%$);
   \item se extraen \textbf{componentes conexas} filtradas por altura y área; el centroide decide el triángulo ($x>y$: horizontal; si no, vertical) y los dígitos pegados (ancho $>1.15\times$ alto) se separan;
   \item cada dígito se centra en un cuadrado, se lleva a $28\times28$ y se describe con HOG (9 orientaciones, celdas $7\times7$, bloques $2\times2$)~\cite{dalal2005}, píxeles $14\times14$ y la relación de aspecto.
 \end{enumerate}

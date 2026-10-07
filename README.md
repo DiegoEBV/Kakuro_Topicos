@@ -181,7 +181,6 @@ El informe técnico se encuentra en la carpeta `report/`:
 
 ## 👥 Integrantes
 * Integrante 1: Diego Ballon
-* Integrante 2: [Nombre del compañero]
-* Integrante 3: [Nombre del compañero]
+* Integrante 2: Jeffrey Diaz
 
 Curso: **CC58 - Tópicos en Ciencia de la Computación** · Universidad Peruana de Ciencias Aplicadas (UPC)
